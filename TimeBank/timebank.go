@@ -68,7 +68,7 @@ func (t *BlockChainTimeBank) Init(stub shim.ChaincodeStubInterface) peer.Respons
 		Ability:            []string{"做饭", "教学高数"},
 		StarSign:           3,
 		UserAsset:          float64(1000),
-		Comment:            []string{"很细心", "Good!!!", "王老师教的高数就是好"},
+		Comment:            []string{"很细心", "Good!!!", "杨老师教的高数就是好"},
 		RecommenderID:      "",
 	}
 	var orgList lib.Organization
