@@ -144,11 +144,15 @@ func InheritAsset(stub shim.ChaincodeStubInterface, args []string) peer.Response
 //充值工分
 func RechargeAsset(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//fmt.Println("RechargeAsset starting ...")
-	var RechargeID string //充值方ID
-	var Amount float64    //工分交易金额
+
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting right number of information!!!")
 	}
+	var RechargeID string //充值方ID
+	var Amount float64    //工分交易金额
+	RechargeID = args[0]
+	Amount, _ = strconv.ParseFloat(args[1], 64)
+
 	recharger, err := utils.QueryLedger(stub, lib.UserKey, []string{RechargeID})
 	if err != nil {
 		return shim.Error(fmt.Sprintf("充值方ID有误%s", err))
@@ -156,8 +160,6 @@ func RechargeAsset(stub shim.ChaincodeStubInterface, args []string) peer.Respons
 	var rechargerlist lib.User
 	_ = json.Unmarshal(recharger[0], &rechargerlist)
 
-	RechargeID = args[0]
-	Amount, _ = strconv.ParseFloat(args[1], 64)
 	// if val, err := strconv.ParseFloat(amount, 64); err != nil {
 	// 	return shim.Error(fmt.Sprintf("amount参数格式转换出错: %s", err))
 	// } else {
@@ -199,7 +201,7 @@ func RechargeAsset(stub shim.ChaincodeStubInterface, args []string) peer.Respons
 }
 
 //特殊交易查询
-func SpecailTradeList(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+func SpecialTradeList(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	if len(args) != 1 {
 		return shim.Error("Expect correct information !!!")
 	}
