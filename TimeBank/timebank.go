@@ -155,11 +155,11 @@ func (t *BlockChainTimeBank) Invoke(stub shim.ChaincodeStubInterface) peer.Respo
 		return routers.ElderServicingList(stub, args)
 	} else if funcName == "ServiceList" { //打印可提供的服务
 		return routers.ServiceList(stub, args)
-	} else if funcName == "UpdateUserInfo" {
+	} else if funcName == "UpdateUserInfo" {//更新用户信息
 		return routers.UpdateUserInfo(stub, args)
-	} else if funcName == "UpdateServiceInfo" {
+	} else if funcName == "UpdateServiceInfo" {//更新服务信息
 		return routers.UpdateServiceInfo(stub, args)
-	} else if funcName == "GetUpdateHistory" {
+	} else if funcName == "GetUpdateHistory" {//查询更新历史
 		return routers.GetUpdateHistory(stub, args)
 	} else {
 		return shim.Error("Invoke funcName error !!!")
