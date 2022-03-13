@@ -144,7 +144,7 @@ func CreateOrg(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 		OrgID:      orgid,
 		OrgName:    orgname,
 		UserSum:    orgnum,
-		HaveUserID: nil,
+		HaveUserID: []string{},
 	}
 
 	_ = utils.WriteLedger(org, stub, lib.OrganizationKey, []string{orgid})
