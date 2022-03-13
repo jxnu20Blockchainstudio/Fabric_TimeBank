@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -50,7 +49,7 @@ func (t *BlockChainTimeBank) Init(stub shim.ChaincodeStubInterface) peer.Respons
 			OrgID:      val,
 			OrgName:    orgNames[i],
 			UserSum:    userNums[i],
-			HaveUserID: nil,
+			HaveUserID: []string{},
 		}
 		// 写入账本
 		utils.WriteLedger(oragnization, stub, lib.OrganizationKey, []string{val})
@@ -71,18 +70,20 @@ func (t *BlockChainTimeBank) Init(stub shim.ChaincodeStubInterface) peer.Respons
 		Comment:            []string{"很细心", "Good!!!", "杨老师教的高数就是好"},
 		RecommenderID:      "",
 	}
-	var orgList lib.Organization
-	org, err := utils.QueryLedger(stub, lib.OrganizationKey, []string{userwang.Postcode})
-	if err != nil {
-		return shim.Error("Failed to find the organization !!!")
-	}
-	_ = json.Unmarshal(org[0], &orgList)
+	// var orgList1 lib.Organization
+	// org1, err := utils.QueryLedger(stub, lib.OrganizationKey, []string{userwang.Postcode})
+	// if err != nil {
+	// 	return shim.Error("Failed to find the organization !!!")
+	// }
+	// _ = json.Unmarshal(org1[0], &orgList1)
 
-	orgList.UserSum++
-	orgList.HaveUserID = append(orgList.HaveUserID, userwang.UserID)
+	// orgList1.UserSum++
+	// orgList1.HaveUserID = append(orgList1.HaveUserID, userwang.UserID)
 
-	_ = utils.WriteLedger(orgList, stub, lib.OrganizationKey, []string{userwang.Postcode})
+	// _ = utils.WriteLedger(orgList1, stub, lib.OrganizationKey, []string{userwang.Postcode})
 	//吕婆婆
+
+	// var orgList2 lib.Organization
 	userlv := &lib.User{
 		UserID:             "02",
 		UserName:           "吕婆婆",
@@ -97,17 +98,17 @@ func (t *BlockChainTimeBank) Init(stub shim.ChaincodeStubInterface) peer.Respons
 		Comment:            []string{"很细心", "Very Good!!!", "太可爱了"},
 		RecommenderID:      "",
 	}
-	org, err = utils.QueryLedger(stub, lib.OrganizationKey, []string{userlv.Postcode})
-	if err != nil {
-		return shim.Error("Failed to find the organization !!!")
-	}
-	//var orgList lib.Organization
-	_ = json.Unmarshal(org[0], &orgList)
+	// org2, err := utils.QueryLedger(stub, lib.OrganizationKey, []string{userlv.Postcode})
+	// if err != nil {
+	// 	return shim.Error("Failed to find the organization !!!")
+	// }
+	// //var orgList lib.Organization
+	// _ = json.Unmarshal(org2[0], &orgList2)
 
-	orgList.UserSum++
-	orgList.HaveUserID = append(orgList.HaveUserID, userlv.UserID)
+	// orgList2.UserSum++
+	// orgList2.HaveUserID = append(orgList2.HaveUserID, userlv.UserID)
 
-	_ = utils.WriteLedger(orgList, stub, lib.OrganizationKey, []string{userwang.Postcode})
+	// _ = utils.WriteLedger(orgList2, stub, lib.OrganizationKey, []string{userwang.Postcode})
 	_ = utils.WriteLedger(userwang, stub, lib.UserKey, []string{userwang.UserID})
 	_ = utils.WriteLedger(userlv, stub, lib.UserKey, []string{userlv.UserID})
 	return shim.Success(nil)
@@ -149,11 +150,17 @@ func (t *BlockChainTimeBank) Invoke(stub shim.ChaincodeStubInterface) peer.Respo
 	} else if funcName == "RechargeAsset" { //充值资产
 		return routers.RechargeAsset(stub, args)
 	} else if funcName == "SpecialTradeList" { //打印特殊交易
-		return routers.SpecailTradeList(stub, args)
+		return routers.SpecialTradeList(stub, args)
 	} else if funcName == "ElderServicingList" { //打印所有老人服务状态
 		return routers.ElderServicingList(stub, args)
 	} else if funcName == "ServiceList" { //打印可提供的服务
 		return routers.ServiceList(stub, args)
+	} else if funcName == "UpdateUserInfo" {
+		return routers.UpdateUserInfo(stub, args)
+	} else if funcName == "UpdateServiceInfo" {
+		return routers.UpdateServiceInfo(stub, args)
+	} else if funcName == "GetUpdateHistory" {
+		return routers.GetUpdateHistory(stub, args)
 	} else {
 		return shim.Error("Invoke funcName error !!!")
 	}
