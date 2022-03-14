@@ -10,9 +10,6 @@ import (
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric-protos-go/peer"
-	//"github.com/togettoyou/blockchain-real-estate/chaincode/blockchain-real-estate/lib"
-	//"github.com/togettoyou/blockchain-real-estate/chaincode/blockchain-real-estate/routers"
-	//"github.com/togettoyou/blockchain-real-estate/chaincode/blockchain-real-estate/utils"
 )
 
 type BlockChainTimeBank struct {
