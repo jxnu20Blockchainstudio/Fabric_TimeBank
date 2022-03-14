@@ -148,12 +148,12 @@ func RechargeAsset(stub shim.ChaincodeStubInterface, args []string) peer.Respons
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting right number of information!!!")
 	}
-	var RechargeID string //充值方ID
-	var Amount float64    //工分交易金额
-	RechargeID = args[0]
+	var rechargerID string //充值方ID
+	var Amount float64     //工分交易金额
+	rechargerID = args[0]
 	Amount, _ = strconv.ParseFloat(args[1], 64)
 
-	recharger, err := utils.QueryLedger(stub, lib.UserKey, []string{RechargeID})
+	recharger, err := utils.QueryLedger(stub, lib.UserKey, []string{rechargerID})
 	if err != nil {
 		return shim.Error(fmt.Sprintf("充值方ID有误%s", err))
 	}
@@ -166,7 +166,7 @@ func RechargeAsset(stub shim.ChaincodeStubInterface, args []string) peer.Respons
 	// 	Amount = val
 	// }
 	rechargerlist.UserAsset += Amount
-	_ = utils.WriteLedger(rechargerlist, stub, lib.UserKey, []string{RechargeID})
+	_ = utils.WriteLedger(rechargerlist, stub, lib.UserKey, []string{rechargerID})
 	// jsontest, _ := json.Marshal(sender)
 	// stub.PutState(sender.UserID, jsontest)
 
@@ -220,4 +220,23 @@ func SpecialTradeList(stub shim.ChaincodeStubInterface, args []string) peer.Resp
 	specialTradeListByte, _ := json.Marshal(specialTradeList)
 
 	return shim.Success(specialTradeListByte)
+}
+
+//充值查询,可根据txid查询指定记录，也可以查询所有记录
+func RechargeList(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+	var rechargeList []lib.RechargeSystem
+	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.RechargeSystemKey, args)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("%s", err))
+	}
+	for _, val := range results {
+		if val != nil {
+			var recharge lib.RechargeSystem
+			_ = json.Unmarshal(val, &recharge)
+			rechargeList = append(rechargeList, recharge)
+		}
+	}
+	rechargeListByte, _ := json.Marshal(rechargeList)
+
+	return shim.Success(rechargeListByte)
 }
