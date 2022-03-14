@@ -177,7 +177,7 @@ func RechargeAsset(stub shim.ChaincodeStubInterface, args []string) peer.Respons
 		RechargeTime:  time.Now().Format("2006-01-02 15:04:05"),
 	}
 	jsonTxDT, _ := json.Marshal(txdt)
-	_ = utils.WriteLedger(txdt, stub, lib.RechargeSystemKey, []string{RechargeID})
+	_ = utils.WriteLedger(txdt, stub, lib.RechargeSystemKey, []string{txdt.RechargeID})
 	//stub.PutState(txdt.RechargeID, jsonTxDT)
 
 	var managerID = "666666"
