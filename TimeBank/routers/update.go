@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"strconv"
-	"time"
+	//"time"
 
 	"github.com/Jxnuyang/20-software-qkl/chaincode/TimeBank/lib"
 	"github.com/Jxnuyang/20-software-qkl/chaincode/TimeBank/utils"
@@ -83,28 +83,28 @@ func UpdateServiceInfo(stub shim.ChaincodeStubInterface, args []string) peer.Res
 }
 
 //查询更新历史
-func GetUpdateHistory(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-	keyInter, err := stub.GetHistoryForKey(args[0])
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	defer keyInter.Close()
-	var hisList []string
-	for keyInter.HasNext() {
-		response, interErr := keyInter.Next()
-		if interErr != nil {
-			return shim.Error(interErr.Error())
-		}
-		id := response.TxId
-		value := response.Value
-		status := response.IsDelete
-		timeStamp := response.Timestamp
-		tm := time.Unix(timeStamp.Seconds, 0)
-		timeString := tm.Format("2006-01-02 03:04:05 PM")
-		all := fmt.Sprintf("%s,%s,%s,%s", id, string(value), status, timeString)
-		//fmt.Println(id, string(value), status, timeString)
-		hisList = append(hisList, all)
-	}
-	jsonText, _ := json.Marshal(hisList)
-	return shim.Success(jsonText)
-}
+// func GetUpdateHistory(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+// 	keyInter, err := stub.GetHistoryForKey(args[0])
+// 	if err != nil {
+// 		return shim.Error(err.Error())
+// 	}
+// 	defer keyInter.Close()
+// 	var hisList []string
+// 	for keyInter.HasNext() {
+// 		response, interErr := keyInter.Next()
+// 		if interErr != nil {
+// 			return shim.Error(interErr.Error())
+// 		}
+// 		id := response.TxId
+// 		value := response.Value
+// 		status := response.IsDelete
+// 		timeStamp := response.Timestamp
+// 		tm := time.Unix(timeStamp.Seconds, 0)
+// 		timeString := tm.Format("2006-01-02 03:04:05 PM")
+// 		all := fmt.Sprintf("%s,%s,%t,%s", id, string(value), status, timeString)
+// 		//fmt.Println(id, string(value), status, timeString)
+// 		hisList = append(hisList, all)
+// 	}
+// 	jsonText, _ := json.Marshal(hisList)
+// 	return shim.Success(jsonText)
+// }
