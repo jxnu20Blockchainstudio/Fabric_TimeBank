@@ -200,43 +200,43 @@ func RechargeAsset(stub shim.ChaincodeStubInterface, args []string) peer.Respons
 	return shim.Success(jsonTxDT)
 }
 
-//特殊交易查询
-func SpecialTradeList(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-	if len(args) != 1 {
-		return shim.Error("Expect correct information !!!")
-	}
-	var specialTradeList []lib.TransferAsset
-	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.TransferAssetKey, args)
-	if err != nil {
-		return shim.Error(fmt.Sprintf("%s", err))
-	}
-	for _, val := range results {
-		if val != nil {
-			var specialTrade lib.TransferAsset
-			_ = json.Unmarshal(val, &specialTrade)
-			specialTradeList = append(specialTradeList, specialTrade)
-		}
-	}
-	specialTradeListByte, _ := json.Marshal(specialTradeList)
+// //特殊交易查询
+// func SpecialTradeList(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+// 	if len(args) != 1 {
+// 		return shim.Error("Expect correct information !!!")
+// 	}
+// 	var specialTradeList []lib.TransferAsset
+// 	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.TransferAssetKey, args)
+// 	if err != nil {
+// 		return shim.Error(fmt.Sprintf("%s", err))
+// 	}
+// 	for _, val := range results {
+// 		if val != nil {
+// 			var specialTrade lib.TransferAsset
+// 			_ = json.Unmarshal(val, &specialTrade)
+// 			specialTradeList = append(specialTradeList, specialTrade)
+// 		}
+// 	}
+// 	specialTradeListByte, _ := json.Marshal(specialTradeList)
 
-	return shim.Success(specialTradeListByte)
-}
+// 	return shim.Success(specialTradeListByte)
+// }
 
-//充值查询,可根据txid查询指定记录，也可以查询所有记录
-func RechargeList(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-	var rechargeList []lib.RechargeSystem
-	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.RechargeSystemKey, args)
-	if err != nil {
-		return shim.Error(fmt.Sprintf("%s", err))
-	}
-	for _, val := range results {
-		if val != nil {
-			var recharge lib.RechargeSystem
-			_ = json.Unmarshal(val, &recharge)
-			rechargeList = append(rechargeList, recharge)
-		}
-	}
-	rechargeListByte, _ := json.Marshal(rechargeList)
+// //充值查询,可根据txid查询指定记录，也可以查询所有记录
+// func RechargeList(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+// 	var rechargeList []lib.RechargeSystem
+// 	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.RechargeSystemKey, args)
+// 	if err != nil {
+// 		return shim.Error(fmt.Sprintf("%s", err))
+// 	}
+// 	for _, val := range results {
+// 		if val != nil {
+// 			var recharge lib.RechargeSystem
+// 			_ = json.Unmarshal(val, &recharge)
+// 			rechargeList = append(rechargeList, recharge)
+// 		}
+// 	}
+// 	rechargeListByte, _ := json.Marshal(rechargeList)
 
-	return shim.Success(rechargeListByte)
-}
+// 	return shim.Success(rechargeListByte)
+// }
