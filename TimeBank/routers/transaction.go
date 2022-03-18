@@ -13,16 +13,6 @@ import (
 	"github.com/hyperledger/fabric-protos-go/peer"
 )
 
-// var letters = []rune("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-// func randSeq(n int) string {
-// 	b := make([]rune, n)
-// 	for i := range b {
-// 		b[i] = letters[rand.Intn(len(letters))]
-// 	}
-// 	return string(b)
-// }
-
 //老人发起服务
 func CreateServicing(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	if len(args) != 3 {
@@ -150,52 +140,6 @@ func AcceptServicing(stub shim.ChaincodeStubInterface, args []string) peer.Respo
 	return shim.Success(servicingByte)
 }
 
-//供老人查看服务状态，输入老人id以及服务类型id，即可查询服务状态
-func QueryServicingStatus(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-	if len(args) == 0 {
-		return shim.Error("Expect correct information !!!")
-	}
-	var serviceList []lib.Servicing
-	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.ServicingKey, args)
-	if err != nil {
-		return shim.Error(fmt.Sprintf("%s", err))
-	}
-	for _, v := range results {
-		if v != nil {
-			var servicing lib.Servicing
-			_ = json.Unmarshal(v, &servicing)
-			serviceList = append(serviceList, servicing)
-		}
-	}
-	serviceListByte, err := json.Marshal(serviceList)
-	if err != nil {
-		return shim.Error("QueryServiceList Marshal error !!!")
-	}
-	return shim.Success(serviceListByte)
-}
-
-//查询服务记录，输入交易id、交易双方id和交易id，即可查询两人间的所有服务记录
-func QueryServiceTrade(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-	if len(args) == 0 {
-		return shim.Error("Expect correct information !!!")
-	}
-	var serviceTradeList []lib.ServiceTrade
-	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.ServiceTradeKey, args)
-	if err != nil {
-		return shim.Error(fmt.Sprintf("%s", err))
-	}
-	for _, val := range results {
-		if val != nil {
-			var serviceTrade lib.ServiceTrade
-			_ = json.Unmarshal(val, &serviceTrade)
-			serviceTradeList = append(serviceTradeList, serviceTrade)
-		}
-	}
-	serviceTradeListByte, _ := json.Marshal(serviceTradeList)
-
-	return shim.Success(serviceTradeListByte)
-}
-
 //结束服务状态
 func DoneServicing(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	if len(args) != 4 {
@@ -281,7 +225,7 @@ func CloseServicing(stub shim.ChaincodeStubInterface, args []string) peer.Respon
 	var elder lib.User
 	_ = json.Unmarshal(elderList[0], &elder)
 
-	servicing.ServicingState = lib.ServiceTradingStatusConstant()["canclled"]
+	servicing.ServicingState = lib.ServiceTradingStatusConstant()["cancelled"]
 	elder.UserAsset += servicing.ServicingValue
 
 	_ = utils.WriteLedger(servicing, stub, lib.ServicingKey, []string{elderID, servicingType})
@@ -289,3 +233,49 @@ func CloseServicing(stub shim.ChaincodeStubInterface, args []string) peer.Respon
 
 	return shim.Success([]byte("Service Cancelled successfully ..."))
 }
+
+// //供老人查看服务状态，输入老人id以及服务类型id，即可查询服务状态
+// func QueryServicingStatus(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+// 	if len(args) == 0 {
+// 		return shim.Error("Expect correct information !!!")
+// 	}
+// 	var serviceList []lib.Servicing
+// 	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.ServicingKey, args)
+// 	if err != nil {
+// 		return shim.Error(fmt.Sprintf("%s", err))
+// 	}
+// 	for _, v := range results {
+// 		if v != nil {
+// 			var servicing lib.Servicing
+// 			_ = json.Unmarshal(v, &servicing)
+// 			serviceList = append(serviceList, servicing)
+// 		}
+// 	}
+// 	serviceListByte, err := json.Marshal(serviceList)
+// 	if err != nil {
+// 		return shim.Error("QueryServiceList Marshal error !!!")
+// 	}
+// 	return shim.Success(serviceListByte)
+// }
+
+// //查询服务记录，输入交易id、交易双方id和交易id，即可查询两人间的所有服务记录
+// func QueryServiceTrade(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+// 	if len(args) == 0 {
+// 		return shim.Error("Expect correct information !!!")
+// 	}
+// 	var serviceTradeList []lib.ServiceTrade
+// 	results, err := utils.GetStateByPartialCompositeKeys(stub, lib.ServiceTradeKey, args)
+// 	if err != nil {
+// 		return shim.Error(fmt.Sprintf("%s", err))
+// 	}
+// 	for _, val := range results {
+// 		if val != nil {
+// 			var serviceTrade lib.ServiceTrade
+// 			_ = json.Unmarshal(val, &serviceTrade)
+// 			serviceTradeList = append(serviceTradeList, serviceTrade)
+// 		}
+// 	}
+// 	serviceTradeListByte, _ := json.Marshal(serviceTradeList)
+
+// 	return shim.Success(serviceTradeListByte)
+// }
